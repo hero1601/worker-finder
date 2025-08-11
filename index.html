@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local Worker Finder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #f4f4f4;
+    }
+    header {
+      background: #1e88e5;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+    .worker {
+      background: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .worker h3 {
+      margin: 0 0 5px 0;
+    }
+    .filter {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    select, button {
+      padding: 8px;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Local Worker Finder</h1>
+  </header>
+
+  <div class="container">
+    <div class="filter">
+      <select id="categoryFilter">
+        <option value="">All Categories</option>
+        <option value="Plumber">Plumber</option>
+        <option value="Electrician">Electrician</option>
+        <option value="Tutor">Tutor</option>
+      </select>
+      <button onclick="getLocation()">Find Nearby</button>
+    </div>
+
+    <div id="workersList"></div>
+  </div>
+
+  <script>
+    // Mock worker data
+    const workers = [
+      { name: "John Smith", category: "Plumber", lat: 40.7128, lon: -74.0060, contact: "tel:+123456789" },
+      { name: "Emily Johnson", category: "Electrician", lat: 40.73061, lon: -73.935242, contact: "mailto:emily@example.com" },
+      { name: "David Lee", category: "Tutor", lat: 40.650002, lon: -73.949997, contact: "tel:+198765432" }
+    ];
+
+    function displayWorkers(list) {
+      const container = document.getElementById("workersList");
+      container.innerHTML = "";
+      if (list.length === 0) {
+        container.innerHTML = "<p>No workers found nearby.</p>";
+        return;
+      }
+      list.forEach(w => {
+        container.innerHTML += `
+          <div class="worker">
+            <h3>${w.name}</h3>
+            <p>Category: ${w.category}</p>
+            <p><a href="${w.contact}">Contact</a></p>
+          </div>
+        `;
+      });
+    }
+
+    // Filter by category
+    document.getElementById("categoryFilter").addEventListener("change", () => {
+      const cat = document.getElementById("categoryFilter").value;
+      if (cat) {
+        displayWorkers(workers.filter(w => w.category === cat));
+      } else {
+        displayWorkers(workers);
+      }
+    });
+
+    // Get user location and filter by distance
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          const userLat = pos.coords.latitude;
+          const userLon = pos.coords.longitude;
+          const nearby = workers.filter(w => getDistance(userLat, userLon, w.lat, w.lon) < 20); // 20 km range
+          displayWorkers(nearby);
+        }, () => {
+          alert("Location access denied.");
+        });
+      } else {
+        alert("Geolocation not supported.");
+      }
+    }
+
+    // Distance formula (Haversine)
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+      return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+    }
+
+    // Show all workers on load
+    displayWorkers(workers);
+  </script>
+</body>
+</html>
