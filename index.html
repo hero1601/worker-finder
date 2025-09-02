@@ -1,132 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Local Worker Finder</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAIMS Ventures LLC - Professional & Technical Services</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0; padding: 0;
-      background: #f4f4f4;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; color: #333; line-height: 1.6; overflow-x: hidden; }
+
+    /* Header */
     header {
-      background: #1e88e5;
+      background: linear-gradient(135deg, #14213d 0%, #1d4ed8 100%);
       color: white;
-      padding: 15px;
+      padding: 1rem 0;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    nav {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      background: linear-gradient(45deg, #00f5ff, #1d4ed8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .nav-links { list-style: none; display: flex; gap: 2rem; }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: #00f5ff; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
+      color: white;
+      padding: 120px 2rem 80px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
     }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      padding: 20px;
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, #fff, #00f5ff, #1d4ed8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    .worker {
-      background: white;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .worker h3 {
-      margin: 0 0 5px 0;
-    }
-    .filter {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-    select, button {
-      padding: 8px;
+    .hero p { font-size: 1.2rem; max-width: 600px; margin: auto; margin-bottom: 2rem; }
+    .cta-button {
+      background: linear-gradient(45deg, #00f5ff, #1d4ed8);
+      color: white;
+      padding: 14px 36px;
+      border: none;
+      border-radius: 40px;
       font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .cta-button:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+
+    /* Services */
+    .services { padding: 100px 2rem; background: #f8fafc; }
+    .section-title { text-align: center; margin-bottom: 3rem; }
+    .section-title h2 {
+      font-size: 2.5rem;
+      background: linear-gradient(45deg, #14213d, #1d4ed8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .service-card {
+      background: white; padding: 2rem; border-radius: 16px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.1); transition: all 0.3s;
+    }
+    .service-card:hover { transform: translateY(-8px); }
+    .service-icon {
+      font-size: 2rem; margin-bottom: 1rem; color: #1d4ed8;
+    }
+    .service-card h3 { margin-bottom: 0.5rem; }
+
+    /* About */
+    .about { padding: 100px 2rem; background: linear-gradient(135deg, #14213d, #1d4ed8); color: white; }
+    .about-content { max-width: 900px; margin: auto; text-align: center; }
+    .about-content h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(45deg, #fff, #00f5ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .about-content p { margin-bottom: 1rem; opacity: 0.9; }
+
+    /* Contact */
+    .contact { padding: 100px 2rem; background: #f8fafc; }
+    .contact-content {
+      max-width: 600px;
+      margin: auto;
+      display: flex;
+      justify-content: center;
+    }
+    .contact-form {
+      background: white;
+      padding: 3rem; /* Increased padding */
+      border-radius: 16px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 700px; /* Increased max width */
+    }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+    .form-group input, .form-group textarea {
+      width: 100%; padding: 0.8rem; border: 1px solid #ccc;
+      border-radius: 8px; font-size: 1rem;
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .contact-info h3 { margin-bottom: 1rem; }
+    .contact-item { margin-bottom: 1rem; }
+
+    /* Footer */
+    footer {
+      background: #14213d; color: white; text-align: center; padding: 1.5rem 2rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .contact-content { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2rem; }
     }
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header>
-    <h1>Local Worker Finder</h1>
+    <nav>
+      <div class="logo">AAIMS Ventures</div>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
   </header>
 
-  <div class="container">
-    <div class="filter">
-      <select id="categoryFilter">
-        <option value="">All Categories</option>
-        <option value="Plumber">Plumber</option>
-        <option value="Electrician">Electrician</option>
-        <option value="Tutor">Tutor</option>
-      </select>
-      <button onclick="getLocation()">Find Nearby</button>
+  <!-- Hero -->
+  <section id="home" class="hero">
+    <div>
+      <h1>Technical and Professional Services</h1>
+      <p>AIIMS Ventures delivers professional and technical services in software and accounting. We specialize in website development, bookkeeping, and tailored digital solutions to support your business growth.</p>
+      <button class="cta-button" onclick="document.getElementById('contact').scrollIntoView()">Get Started</button>
     </div>
+  </section>
 
-    <div id="workersList"></div>
+  <!-- Services -->
+  <!-- Services -->
+<section id="services" class="services">
+  <div class="section-title">
+    <h2>Our Services</h2>
+    <p>Professional and technical solutions to support your business growth</p>
   </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">💻</div>
+      <h3>Website Development</h3>
+      <p>Designing and building responsive, modern websites tailored to your business needs and brand identity.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🧾</div>
+      <h3>Bookkeeping & Accounting</h3>
+      <p>Accurate financial record-keeping, reporting, and accounting services to help you stay compliant and organized.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⚙️</div>
+      <h3>Technical Consulting</h3>
+      <p>Providing expert advice on software, processes, and tools to streamline operations and enhance efficiency.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🏥</div>
+      <h3>Healthcare Software Development</h3>
+      <p>Building secure and reliable healthcare applications, patient management systems, and digital health solutions to improve care and efficiency.</p>
+    </div>
+  </div>
+</section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact">
+    <div class="section-title">
+      <h2>Contact Us</h2>
+      <p>Let’s discuss how we can support your next project.</p>
+    </div>
+    <div class="contact-content">
+      <div class="contact-form">
+        <form action="https://formsubmit.co/admin@aaimsventures.com" method="POST">
+        <!-- Optional: email subject from user -->
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" name="name" id="name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" name="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" name="subject" id="subject" required>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea name="message" id="message" placeholder="Tell us about your needs..." required></textarea>
+        </div>
+
+        <!-- Disable CAPTCHA -->
+        <input type="hidden" name="_captcha" value="false">
+
+        <!-- Optional: redirect -->
+        <input type="hidden" name="_next" value="current-page.html">
+
+        <button type="submit" class="cta-button">Send Message</button>
+      </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 AAIMS Ventures LLC. All Rights Reserved. | Professional & Technical Services</p>
+  </footer>
 
   <script>
-    // Mock worker data
-    const workers = [
-      { name: "John Smith", category: "Plumber", lat: 40.7128, lon: -74.0060, contact: "tel:+123456789" },
-      { name: "Emily Johnson", category: "Electrician", lat: 40.73061, lon: -73.935242, contact: "mailto:emily@example.com" },
-      { name: "David Lee", category: "Tutor", lat: 40.650002, lon: -73.949997, contact: "tel:+198765432" }
-    ];
-
-    function displayWorkers(list) {
-      const container = document.getElementById("workersList");
-      container.innerHTML = "";
-      if (list.length === 0) {
-        container.innerHTML = "<p>No workers found nearby.</p>";
-        return;
-      }
-      list.forEach(w => {
-        container.innerHTML += `
-          <div class="worker">
-            <h3>${w.name}</h3>
-            <p>Category: ${w.category}</p>
-            <p><a href="${w.contact}">Contact</a></p>
-          </div>
-        `;
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        // e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
       });
-    }
-
-    // Filter by category
-    document.getElementById("categoryFilter").addEventListener("change", () => {
-      const cat = document.getElementById("categoryFilter").value;
-      if (cat) {
-        displayWorkers(workers.filter(w => w.category === cat));
-      } else {
-        displayWorkers(workers);
-      }
     });
 
-    // Get user location and filter by distance
-    function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-          const userLat = pos.coords.latitude;
-          const userLon = pos.coords.longitude;
-          const nearby = workers.filter(w => getDistance(userLat, userLon, w.lat, w.lon) < 20); // 20 km range
-          displayWorkers(nearby);
-        }, () => {
-          alert("Location access denied.");
-        });
+    //Simple form alert
+    document.querySelector('form').addEventListener('submit', e => {
+      alert('Thank you! Your message has been received.');
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      if (window.scrollY > 80) {
+        header.style.background = 'rgba(20, 33, 61, 0.95)';
       } else {
-        alert("Geolocation not supported.");
+        header.style.background = 'linear-gradient(135deg, #14213d 0%, #1d4ed8 100%)';
       }
-    }
-
-    // Distance formula (Haversine)
-    function getDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371;
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = 
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-        Math.sin(dLon/2) * Math.sin(dLon/2);
-      return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
-    }
-
-    // Show all workers on load
-    displayWorkers(workers);
+    });
   </script>
 </body>
 </html>
