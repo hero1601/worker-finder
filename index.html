@@ -38,7 +38,14 @@
       width: auto;
       transform: none; /* increase 50% */
     }
-    .nav-links { list-style: none; display: flex; gap: 2rem; margin-right: 1rem; }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      margin-right: 1rem;
+      position: relative; /* make nav links relative */
+      flex-wrap: wrap;    /* allows wrapping on small screens */
+    }
     .nav-links a {
       color: #1a73e8;
       text-decoration: none;
